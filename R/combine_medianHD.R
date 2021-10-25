@@ -1,0 +1,100 @@
+#' Median of GMMs under Hilbertian Distance
+#' 
+#' 
+#' @examples 
+#' \donttest{
+#' # -------------------------------------------------------------
+#' #                   Mixtures for SMILEY Data
+#' #
+#' # STEP 1. Generate 10 datasets with noise
+#' # STEP 2. Fit GMM with varying number of components (k=3-8)
+#' # STEP 3. Combine GMMs with uniform weights and Visualize
+#' # -------------------------------------------------------------
+#' # STEP 1. 10 datasets with noise
+#' list_data = list()
+#' for (i in 1:10){
+#'   list_data[[i]] = T4cluster::genSMILEY(sd=0.25)
+#' }
+#' 
+#' # STEP 2. Fit GMM with varying k
+#' list_gmm = list()
+#' for (i in 1:10){
+#'   list_gmm[[i]] = gmm(list_data[[i]]$data, k=sample(3:8, 1))
+#' }
+#' 
+#' # STEP 3. Find Median of GMMs under Hilbert Embedding
+#' medgmm1 = medianHD(list_gmm, theta=0.01)
+#' medgmm2 = medianHD(list_gmm, theta=1)
+#' medgmm3 = medianHD(list_gmm, theta=100)
+#' 
+#' # we use 'ggplot2' for visualization
+#' # prepare grid and density evaluation
+#' npts  = 250
+#' pgrid = as.matrix(expand.grid(x=seq(from=-1.5,to=1.5,length.out=npts),
+#'                                 y=seq(from=-1.5,to=1.5,length.out=npts)))
+#' prob1 = gmmdensity(medgmm1, pgrid)
+#' prob2 = gmmdensity(medgmm2, pgrid)
+#' prob3 = gmmdensity(medgmm3, pgrid)
+#'   
+#' obj1 = rbind(cbind(pgrid, prob1), cbind(pgrid, prob2), cbind(pgrid, prob3))
+#' obj2 = as.factor(rep(c(1,2,3),each=(npts^2)))
+#' odf  = data.frame(x=obj1[,1], y=obj1[,2], density=obj1[,3], class=obj2)
+#' levels(odf$class) = c("theta=0.1","theta=1","theta=10")
+#' }
+#' \dontrun{
+#' # plot
+#' require(ggplot2)
+#' ggplot2::ggplot(odf, aes(x=x,y=y,z=density)) + 
+#'   facet_grid(. ~ class) + 
+#'   geom_raster(aes(fill=density)) + 
+#'   geom_contour(colour="white") +
+#'   scale_fill_viridis_c() +
+#'   scale_x_continuous(expand = c(0, 0)) +
+#'   scale_y_continuous(expand = c(0, 0)) +
+#'   coord_fixed(xlim=c(-1.5,1.5), ylim=c(-1.5,1.5)) + 
+#'   ggtitle("HD Median of 10 GMMs.")
+#' }
+#' 
+#' @concept combine
+#' @export
+medianHD <- function(gmmlist, weight=NULL, theta=1.0, ...){
+  ## INPUTS : EXPLICIT
+  check_gmmlist(gmmlist, "medianHD")
+  K = length(gmmlist)
+  if ((length(weight)<1)&&(is.null(NULL))){
+    weight = rep(1/K, K)
+  } else {
+    cond1 = is.vector(weight)
+    cond2 = (length(weight)==K)
+    cond3 = all(weight > 0)
+    if (!(cond1&&cond2&&cond3)){
+      stop(paste0("* medianHD : input 'weight' should be a vector of length ",K," with nonnegative weights."))
+    }
+    weight = weight/base::sum(weight)
+  }
+  mytheta = max(100*.Machine$double.eps, as.double(theta))
+  
+  ## INPUTS : IMPLICIT
+  mypars  = list(...)
+  pnames  = names(mypars)
+  if ("maxiter"%in%pnames){
+    maxiter = max(round(mypars$maxiter), 5)
+  } else {
+    maxiter = 50
+  }
+  if ("abstol"%in%pnames){
+    abstol = max(sqrt(.Machine$double.eps), as.double(mypars$abstol))
+  } else {
+    abstol = 1e-6
+  }
+  
+  ## RUN C++ ROUTINE
+  cpprun  = cpp_combine_medianHD(gmmlist, weight, maxiter, abstol, mytheta)
+  
+  ## PREPARE AND RETURN
+  output = list()
+  output$mean     = cpprun$means
+  output$variance = cpprun$covs
+  output$weight   = as.vector(cpprun$weight)
+  return(structure(output, class="gmmtools"))
+}
