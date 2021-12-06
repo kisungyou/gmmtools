@@ -129,6 +129,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// interdist_bhat
+arma::mat interdist_bhat(arma::mat& par_means, arma::cube& par_covs);
+RcppExport SEXP _gmmtools_interdist_bhat(SEXP par_meansSEXP, SEXP par_covsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type par_means(par_meansSEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type par_covs(par_covsSEXP);
+    rcpp_result_gen = Rcpp::wrap(interdist_bhat(par_means, par_covs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_collapse_MPM
 Rcpp::List cpp_collapse_MPM(arma::vec& weight, arma::mat& mean, arma::cube& vars);
 RcppExport SEXP _gmmtools_cpp_collapse_MPM(SEXP weightSEXP, SEXP meanSEXP, SEXP varsSEXP) {
@@ -338,6 +350,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gmmtools_gmm_armadillo", (DL_FUNC) &_gmmtools_gmm_armadillo, 4},
     {"_gmmtools_gmm_11R", (DL_FUNC) &_gmmtools_gmm_11R, 5},
     {"_gmmtools_gmm_16Gfix", (DL_FUNC) &_gmmtools_gmm_16Gfix, 5},
+    {"_gmmtools_interdist_bhat", (DL_FUNC) &_gmmtools_interdist_bhat, 2},
     {"_gmmtools_cpp_collapse_MPM", (DL_FUNC) &_gmmtools_cpp_collapse_MPM, 3},
     {"_gmmtools_cpp_collapse_W2", (DL_FUNC) &_gmmtools_cpp_collapse_W2, 3},
     {"_gmmtools_cpp_reduction_1990S", (DL_FUNC) &_gmmtools_cpp_reduction_1990S, 4},

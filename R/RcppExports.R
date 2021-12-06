@@ -33,6 +33,10 @@ gmm_16Gfix <- function(X, k, weight, maxiter, usediag) {
     .Call('_gmmtools_gmm_16Gfix', PACKAGE = 'gmmtools', X, k, weight, maxiter, usediag)
 }
 
+interdist_bhat <- function(par_means, par_covs) {
+    .Call('_gmmtools_interdist_bhat', PACKAGE = 'gmmtools', par_means, par_covs)
+}
+
 cpp_collapse_MPM <- function(weight, mean, vars) {
     .Call('_gmmtools_cpp_collapse_MPM', PACKAGE = 'gmmtools', weight, mean, vars)
 }

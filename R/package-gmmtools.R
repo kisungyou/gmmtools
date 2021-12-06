@@ -4,6 +4,7 @@
 #' @name gmmtools
 #' @aliases package-gmmtools
 #' @noRd
+#' @importFrom igraph graph_from_adjacency_matrix cluster_louvain membership
 #' @importFrom Rdimtools do.pca
 #' @import Rdpack
 #' @import maotai

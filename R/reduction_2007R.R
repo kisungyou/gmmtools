@@ -14,7 +14,7 @@
 #' # -------------------------------------------------------------
 #' #              Reduction of Mixture for SMILEY Data
 #' #
-#' # From multiple SMILEY data, we fit 10-component GMM for each 
+#' # From multiple SMILEY data, we fit 7-component GMM for each 
 #' # data and average of models is taken to give a GMM fit with 
 #' # large number of redundant components.
 #' # -------------------------------------------------------------
@@ -22,7 +22,7 @@
 #' list_gmm  = list()
 #' for (i in 1:20){
 #'   data_i = T4cluster::genSMILEY(sd=0.25)$data
-#'   list_gmm[[i]] = gmm(data_i, k=10)
+#'   list_gmm[[i]] = gmm(data_i, k=7)
 #' }
 #' 
 #' # Find the average of models
@@ -59,7 +59,7 @@
 #'   scale_x_continuous(expand = c(0, 0)) +
 #'   scale_y_continuous(expand = c(0, 0)) +
 #'   coord_fixed(xlim=c(-1.5,1.5), ylim=c(-1.5,1.5)) + 
-#'   ggtitle("Reduction of 200-Component GMM via Runnalls (2007).")
+#'   ggtitle("Reduction of 140-Component GMM via Runnalls (2007).")
 #' }  
 #' 
 #' 

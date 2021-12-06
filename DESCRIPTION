@@ -6,7 +6,7 @@ Authors@R: c(person("Kisung", "You", role = c("aut", "cre"), email = "kisungyou@
 Description: Gaussian mixture model is a class of algorithms widely used for density estimation and clustering. We provide algorithms to fit non-trivial variants of the model including sparse covariance and precision assumptions. More importantly, viewing fitted models as objects of interests, we implement methods for merging multiple mixture models and mixture model reduction. For a comprehensive review of finite mixture models, see McLachlan et al. (2019) <doi:10.1146/annurev-statistics-031017-100325>.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Imports: Rcpp (>= 1.0.5), Rdpack, Rdimtools, T4cluster, ggplot2, lpSolve, maotai, stats, utils
+Imports: Rcpp (>= 1.0.5), Rdpack, Rdimtools, T4cluster, ggplot2, lpSolve, maotai, stats, utils, igraph
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.1.2
 RdMacros: Rdpack
